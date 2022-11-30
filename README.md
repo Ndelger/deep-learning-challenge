@@ -1,10 +1,12 @@
-# Unit 21 Homework: Charity Funding Predictor
+# deep-learning-challenge
 
-## Background
+# Report on the Neural Network Model
+### Deep Learning Charity Funding Outcome Predictor Project using hyper-tuned Neural Networks.
 
-The nonprofit foundation Alphabet Soup wants a tool that can help it select the applicants for funding with the best chance of success in their ventures. With your knowledge of machine learning and neural networks, you’ll use the features in the provided dataset to create a binary classifier that can predict whether applicants will be successful if funded by Alphabet Soup.
+## Overview:
 
-From Alphabet Soup’s business team, you have received a CSV containing more than 34,000 organizations that have received funding from Alphabet Soup over the years. Within this dataset are a number of columns that capture metadata about each organization, such as:
+I've created a tool for the  nonprofit foundation Alphabet Soup that can help it select applicants for funding with the best chance of success in their ventures. Using my knowledge of  machine learning and neural networks, I have used the features in the provided dataset to create a binary classifier that can predict whether applicants will be successful if funded by Alphabet Soup. We were set a target of 75% accuracy for our model.
+From Alphabet Soup’s business team, I received a CSV containing more than 34,000 organizations that have received funding from Alphabet Soup over the years. Within this dataset are a number of columns that capture metadata about each organization, such as:
 
 * **EIN** and **NAME**—Identification columns
 * **APPLICATION_TYPE**—Alphabet Soup application type
@@ -18,107 +20,87 @@ From Alphabet Soup’s business team, you have received a CSV containing more th
 * **ASK_AMT**—Funding amount requested
 * **IS_SUCCESSFUL**—Was the money used effectively
 
-## Instructions
 
-### Step 1: Preprocess the Data
+# Steps Taken:
 
-Using your knowledge of Pandas and scikit-learn’s `StandardScaler()`, you’ll need to preprocess the dataset. This step prepares you for Step 2, where you'll compile, train, and evaluate the neural network model.
+### 1: Data Preprocessing
+* Dataset was checked for null and duplicated values
+![Screenshot 2022-08-06 at 22 20 24](https://user-images.githubusercontent.com/67019030/183266401-f3e86c8b-d0e3-4b15-98d0-bc14dc4028e4.png)
 
-Using the information we have provided in the starter code, follow the instructions to complete the preprocessing steps.
+* **EIN** and **NAME**—Identification columns removed from the input data because they are neither targets nor features
+![Screenshot 2022-08-06 at 22 21 08](https://user-images.githubusercontent.com/67019030/183266418-f6677845-cc68-4ef9-99d1-d9e09415aee3.png)
 
-1. Read in the charity_data.csv to a Pandas DataFrame, and be sure to identify the following in your dataset:
-  * What variable(s) are the target(s) for your model?
-  * What variable(s) are the feature(s) for your model?
 
-2. Drop the `EIN` and `NAME` columns.
+* Created cutoff point to bin "rare" categorical variables together in a new value, `Other` for both `CLASSIFICATION` and `APPLICATION_TYPE`
+![Screenshot 2022-08-06 at 22 32 50](https://user-images.githubusercontent.com/67019030/183266679-98f07d94-9993-4f99-8df4-ee16de08afe8.png)
+![Screenshot 2022-08-06 at 22 35 47](https://user-images.githubusercontent.com/67019030/183266780-d2f9f084-6334-42c3-bad9-18ddb3f3b0df.png)
 
-3. Determine the number of unique values for each column.
+* Converted categorical data to numeric with `pd.get_dummies`, split the preprocessed data into features and target arrays, then lastly split into training and tesing datasets
+![Screenshot 2022-08-06 at 22 40 32](https://user-images.githubusercontent.com/67019030/183266894-4e63a10c-327b-465e-bcb4-3528bd1a5c30.png)
 
-4. For columns that have more than 10 unique values, determine the number of data points for each unique value.
 
-5. Use the number of data points for each unique value to pick a cutoff point to bin "rare" categorical variables together in a new value, `Other`, and then check if the binning was successful.
+Target Variable for the model: 
+* **IS_SUCCESSFUL**
 
-6. Use `pd.get_dummies()` to encode categorical variables.
+Feature Variables for the model: 
+* **APPLICATION_TYPE**
+* **AFFILIATION**
+* **CLASSIFICATION**
+* **USE_CASE**
+* **ORGANIZATION**
+* **STATUS**
+* **INCOME_AMT**
+* **SPECIAL_CONSIDERATIONS**
+* **ASK_AMT**
 
-### Step 2: Compile, Train, and Evaluate the Model
 
-Using your knowledge of TensorFlow, you’ll design a neural network, or deep learning model, to create a binary classification model that can predict if an Alphabet Soup–funded organization will be successful based on the features in the dataset. You’ll need to think about how many inputs there are before determining the number of neurons and layers in your model. Once you’ve completed that step, you’ll compile, train, and evaluate your binary classification model to calculate the model’s loss and accuracy.
 
-1. Continue using the Jupyter Notebook in which you performed the preprocessing steps from Step 1.
 
-2. Create a neural network model by assigning the number of input features and nodes for each layer using TensorFlow and Keras.
 
-3. Create the first hidden layer and choose an appropriate activation function.
 
-4. If necessary, add a second hidden layer with an appropriate activation function.
+### 2: Compiling, Training, and Evaluating the Model
 
-5. Create an output layer with an appropriate activation function.
+I build the first model with the following parameters with low computation time in mind: 
+* 2 hidden layers with 80, 30 neurons split (the input (node) feature was 43, 80 was chosen as the first layer as it is almost double the input_feature). With an hidden layer activation function of `relu` as this our go to for first model.
+* Output node is 1 as it was binary classifier model with only one output: was the funding application succesfull yes or no. And an output layer activation of `sigmoid` as the model output is binary classification between 0 and 1.
 
-6. Check the structure of the model.
+I then increased the hidden layers to 3 and set the third hidden layer at 30 as the model prediction accuracy was below 75%:
+![Screenshot 2022-08-06 at 23 05 08](https://user-images.githubusercontent.com/67019030/183267456-7b258bf3-6a46-40d0-a971-f435bd0d1973.png)
 
-7. Compile and train the model.
 
-8. Create a callback that saves the model's weights every five epochs.
+For the second model I decided to use `tanh` activation and 3 hidden layers with 90, 30, 20 neurons split and a `sigmoid` activation for output as the output doesn't change.
+![Screenshot 2022-08-06 at 23 06 17](https://user-images.githubusercontent.com/67019030/183267476-bcfa5db1-e9e1-48af-8472-f53f24344373.png)
 
-9. Evaluate the model using the test data to determine the loss and accuracy.
 
-10. Save and export your results to an HDF5 file. Name the file `AlphabetSoupCharity.h5`.
+I experimented with increasing nodes and neurons, with changing other parameters to get a better accuracy but despite doing this both models came below the 75% threshold.
 
-### Step 3: Optimize the Model
 
-Using your knowledge of TensorFlow, optimize your model to achieve a target predictive accuracy higher than 75%.
+### 3: Optimize the Model
 
-Using any or all of the following methods to optimize your model:
+I decided to use an automated model optimizer to get the most accurate model possible by creating method that creates a `keras` Sequential model using the `keras-tuner library` with hyperparametes options. 
+![Screenshot 2022-08-06 at 23 10 28](https://user-images.githubusercontent.com/67019030/183267573-22a806a6-8e10-4b08-bd50-70a9533866a1.png)
+Which will automatically tune the hyperpyrameters until it gets the most accurate model.
+![Screenshot 2022-08-06 at 20 05 12](https://user-images.githubusercontent.com/67019030/183267609-9d4e0d27-2df0-49c9-81ee-4e4012978067.png)
+ 
+ * The best model from the keras tuner method achieved 73% prediction accuracy using a sigmoid activation function with input node of 46, 6 hidden layers at a 51, 81, 71, 6, 41, 91 neurons split and 100 training epochs.
+![Screenshot 2022-08-06 at 23 17 09](https://user-images.githubusercontent.com/67019030/183267670-219340f3-b526-4971-bbf2-9c1ab4349fc9.png)
 
-* Adjust the input data to ensure that no variables or outliers are causing confusion in the model, such as:
-  * Dropping more or fewer columns.
-  * Creating more bins for rare occurrences in columns.
-  * Increasing or decreasing the number of values for each bin.
-* Add more neurons to a hidden layer.
-* Add more hidden layers.
-* Use different activation functions for the hidden layers.
-* Add or reduce the number of epochs to the training regimen.
+# Further and Final Optimization
+I kept the `Name` column for my final Optimized Model as I still hadn't reached the goal of 75% accuracy. Kepping the keras-tuner the same apart from lowering the epochs from 100 to 50 for time optimization.
 
-**Note**: If you make at least three attempts at optimizing your model, you will not lose points if your model does not achieve target performance.
+![Screenshot 2022-08-18 at 21 14 01](https://user-images.githubusercontent.com/67019030/185486209-afd1c3dd-cea3-49e6-84ef-3dbfb97aef80.png)
 
-1. Create a new Jupyter Notebook file and name it `AlphabetSoupCharity_Optimzation.ipynb`.
 
-2. Import your dependencies and read in the `charity_data.csv` to a Pandas DataFrame.
+## Final and best optimized model achieved 80% accuracy , which exceeds the 75% goal and is our best model.
 
-3. Preprocess the dataset like you did in Step 1, Be sure to adjust for any modifications that came out of optimizing the model.
+![Screenshot 2022-08-18 at 20 57 31](https://user-images.githubusercontent.com/67019030/185486450-61a6cc03-eed0-4cec-a628-095438c5590a.png)
 
-4. Design a neural network model, and be sure to adjust for modifications that will optimize the model to achieve higher than 75% accuracy.
+### All Top 3 Models were around the 80%.
+All had a sigmoid activation with different number of input nodes and hidden layers:
 
-5. Save and export your results to an HDF5 file. Name the file `AlphabetSoupCharity_Optimization.h5`.
+![Screenshot 2022-08-18 at 20 57 10](https://user-images.githubusercontent.com/67019030/185484546-0086d851-a10a-4c6d-b65f-7ab2cf923b0e.png)
 
-### Step 4: Write a Report on the Neural Network Model
 
-For this part of the assignment, you’ll write a report on the performance of the deep learning model you created for AlphabetSoup.
-
-The report should contain the following:
-
-1. **Overview** of the analysis: Explain the purpose of this analysis.
-
-2. **Results**: Using bulleted lists and images to support your answers, address the following questions.
-
-  * Data Preprocessing
-    * What variable(s) are the target(s) for your model?
-    * What variable(s) are the features for your model?
-    * What variable(s) should be removed from the input data because they are neither targets nor features?
-
-* Compiling, Training, and Evaluating the Model
-    * How many neurons, layers, and activation functions did you select for your neural network model, and why?
-    * Were you able to achieve the target model performance?
-    * What steps did you take in your attempts to increase model performance?
-
-3. **Summary**: Summarize the overall results of the deep learning model. Include a recommendation for how a different model could solve this classification problem, and then explain your recommendation.
-
-- - -
-
-## Rubric
-
-[Unit 21 Homework Rubric](https://docs.google.com/document/d/1SLOROX0lqZwa1ms-iRbHMQr1QSsMT2k0boO9YpFBnHA/edit?usp=sharing)
-
-- - -
-
-© 2022 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+# Summary: 
+The final automatically optimized neural network trained model from the keras tuner method achieved 80% prediction accuracy with a 0.45 loss, using a sigmoid activation function with input node of 76; 5 hidden layers at a 16, 21, 26, 11, 21, neurons split and 50 training epochs.  Performing better than the non automized model.
+Keeping the `Name` column was crucial in achieving and and going beyond the target. This shows the importance of the shape of your datasets before you preprocess it. 
