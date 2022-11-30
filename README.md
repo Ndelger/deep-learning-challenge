@@ -1,8 +1,5 @@
 # deep-learning-challenge
 
-
-### Deep Learning Charity Funding Outcome Predictor Project using hyper-tuned Neural Networks.
-
 ## Overview:
 
 I've created a tool for the nonprofit foundation Alphabet Soup that can help it select applicants for funding with the best chance of success in their ventures. Using my knowledge of machine learning and neural networks, I have used the features in the provided dataset to create a binary classifier that can predict whether applicants will be successful if funded by Alphabet Soup. We were set a target of 75% accuracy for our model.
